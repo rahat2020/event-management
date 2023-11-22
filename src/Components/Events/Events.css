@@ -1,0 +1,33 @@
+.card_wrapper {
+    transition: all 0.5s ease-in-out;
+    box-shadow: #9494946e 0px 1px 6px;
+}
+.card_wrapper:hover {
+    box-shadow: #f344146e 0px 3px 20px;
+    overflow: hidden;
+    border-radius: .66rem;
+    transition: all 0.5s ease-in-out;
+}
+
+.event_Head_title {
+    font-family: 'Abril Fatface', serif;
+    color: #FF8F50;
+    font-weight: bold;
+}
+.eventImg_container{
+    width: 25rem;
+    height: 12rem;
+    overflow: hidden;
+    border-radius: .66rem;
+    transition: all 0.5s ease-in-out;
+}
+.eventImg_container .event_img {
+    width: 25rem;
+    height: 12rem;
+    border-radius: .66rem;
+    object-fit: cover;
+    transition: all 0.5s ease-in-out;
+}
+.card_wrapper:hover .event_img {
+    transform: scale(1.1);
+}
