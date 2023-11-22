@@ -1,4 +1,4 @@
-import { Col, Container, Form, Row } from 'react-bootstrap';
+import { Col, Container, Form, Row,Image } from 'react-bootstrap';
 import './Footer.css';
 import Nav from 'react-bootstrap/Nav';
 import FacebookIcon from '@mui/icons-material/Facebook';
@@ -7,6 +7,7 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import SendIcon from '@mui/icons-material/Send';
+import logo from '../../assets/logo2.png';
 
 const Footer = () => {
   return (
@@ -16,7 +17,11 @@ const Footer = () => {
           <Row className='mt-3'>
             <Col md={4}>
               <div className="d-flex justify-content-start flex-column align-items-start h-100">
-                <h3><span style={{ color: '#FF5324' }}>Events</span> <span style={{ color: '#fff', }}>Nestle</span></h3>
+                {/* <h3><span style={{ color: '#FF5324' }}>Events</span> <span style={{ color: '#fff', }}>Nestle</span></h3> */}
+                <Image src={logo} alt="logo"
+                  style={{ width: '10rem' }}
+                  loading='lazy'
+                />
                 <p className='text-secondary'>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eum, animi! Lorem, ipsum dolor sit amet consectetur adipisicing elit. Officiis, rem.</p>
                 <div className="d-flex">
                   <AddLocationAltIcon className='text-secondary' /> <p className='text-secondary'>Chattogram, Bangladesh</p>
