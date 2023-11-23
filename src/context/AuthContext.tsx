@@ -1,28 +1,27 @@
 
-import { createContext, useEffect, useReducer, useState, ReactNode, Dispatch } from "react";
+import { createContext, useEffect, useReducer, useState, ReactNode, } from "react";
 
 
 interface AuthState {
-  user: string| null;
-  loading: boolean;
-  error: any; 
-}
-
- interface AuthAction {
-  type: string;
-  // payload?: User | any; 
-  payload:string | any;
-}
-
- interface AuthContextProps {
   user: string | null;
   loading: boolean;
-  error: any; 
-  disspatch: Dispatch<AuthAction>;
+  error: any;
+}
+
+interface AuthAction {
+  type: string;
+  // payload?: User | any; 
+  payload: string | any;
+}
+
+interface AuthContextProps {
+  user: string | null;
+  loading: boolean;
+  error: any;
 }
 
 const INITIAL_STATE: AuthState = {
-  user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : {} as string,
+  user: localStorage.getItem("user" || ""),
   loading: false,
   error: null,
 };
@@ -65,11 +64,11 @@ interface AuthContextProviderProps {
 }
 
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
-  const [state, disspatch] = useReducer(AuthReducer, INITIAL_STATE);
+  const [state, dispatch] = useReducer(AuthReducer, INITIAL_STATE);
 
   useEffect(() => {
-    localStorage.setItem("user", JSON.stringify(state.user) ?? null);
-  }, [state.user]);
+    localStorage.setItem("user", state?.user || '');
+  }, [state?.user]);
 
   return (
     <>
@@ -77,7 +76,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
         user: state.user,
         loading: state.loading,
         error: state.error,
-        disspatch,
+        dispatch,
       }}>
         {children}
       </AuthContext.Provider>

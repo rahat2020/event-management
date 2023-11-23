@@ -7,6 +7,7 @@ import Footer from './Components/Footer/Footer'
 import SingleEvent from './pages/SingleEvent/SingleEvent'
 import NotFound from './pages/NotFound'
 import Profile from './pages/Profile/Profile'
+import Events from './pages/Events/Events'
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
         <Route path='/' element={<Home />} />
         <Route path='/single-event/:id' element={<SingleEvent />} />
         <Route path='/profile' element={<Profile />} />
+        <Route path='/create-events' element={<Events />} />
         <Route path='*' element={<NotFound />} />
       </Routes>
       <Footer />

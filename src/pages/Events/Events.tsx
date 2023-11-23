@@ -1,22 +1,22 @@
-import { Button, Container, Image } from "react-bootstrap"
+import { Button, Container } from "react-bootstrap"
 import Col from 'react-bootstrap/Col';
 import Nav from 'react-bootstrap/Nav';
 import Row from 'react-bootstrap/Row';
 import Tab from 'react-bootstrap/Tab';
 import Form from 'react-bootstrap/Form';
-import './Profile.css';
+import './Events.css';
 import Table from 'react-bootstrap/Table';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import ProfileNav from "./ProfileNav/ProfileNav";
 import Swal from "sweetalert2";
 import { useState } from "react";
 import { useGetUserDataByEmailQuery, useUpdateUserDataMutation } from "../../redux/api/apiSlice";
 import { AuthContext } from "../../context/AuthContext";
 import { useContext } from 'react'
-import { useNavigate } from "react-router-dom";
+import ProfileNav from "../Profile/ProfileNav/ProfileNav";
+import CreateEvents from "./CreateEvents/CreateEvents";
 
-const Profile = () => {
+const Events = () => {
 
     // AUTH CONTEXT APIS
     const { dispatch, user } = useContext(AuthContext)
@@ -24,9 +24,8 @@ const Profile = () => {
     // REDUX QUERIES
     const { data: userData } = useGetUserDataByEmailQuery(user)
     const [UpdateUser] = useUpdateUserDataMutation()
-    console.log('userData', userData)
-
-    // UPDATE USER FORM
+  
+    // UPDATE EVENTS
     const [username, setUserName] = useState(userData?.username || "")
     const [password, setUser_Password] = useState(userData?.password || "")
     const [email, setUser_Email] = useState(userData?.email || "")
@@ -102,14 +101,7 @@ const Profile = () => {
 
     }
 
-    // LOGOUT USER
-    const navigate = useNavigate()
-    const handleLogout = (event: any) => {
-        event.preventDefault();
-        toast('Logout successfully!')
-        dispatch({ type: "LOGOUT" })
-        navigate("/")
-    }
+
 
     // IF THERE IS NO USER (CHECKING USER LOGGED IN OR NOT)
     if (!user) {
@@ -123,7 +115,7 @@ const Profile = () => {
                     <h3 className="text-capitalize">
                         <span style={{ borderBottom: '2px solid #333' }}>
                             {userData?.username}</span>
-                        <span style={{ color: '#FF5324', borderBottom: '2px solid #FF5324' }}> your profile</span>
+                        <span style={{ color: '#FF5324', borderBottom: '2px solid #FF5324' }}> your posts</span>
                     </h3>
                 </div>
 
@@ -133,61 +125,23 @@ const Profile = () => {
                             <Col sm={3}>
                                 <Nav variant="pills" className="flex-column">
                                     <Nav.Item>
-                                        <Nav.Link eventKey="first" className="tabone">Home</Nav.Link>
+                                        <Nav.Link eventKey="first" className="tabone">Create events</Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item>
-                                        <Nav.Link eventKey="second" className="">Update informations</Nav.Link>
+                                        <Nav.Link eventKey="second" className="">Update events</Nav.Link>
                                     </Nav.Item>
 
                                     <Nav.Item>
-                                        <Nav.Link eventKey="third" className="">Booked events</Nav.Link>
+                                        <Nav.Link eventKey="third" className="">View events</Nav.Link>
                                     </Nav.Item>
 
-                                    <Nav.Item>
-                                        <Nav.Link eventKey="four" className="" onClick={handleLogout}>Logout</Nav.Link>
-                                    </Nav.Item>
                                 </Nav>
                             </Col>
                             <Col sm={9}>
                                 <Tab.Content>
                                     <Tab.Pane eventKey="first">
                                         <ProfileNav />
-                                        <Form className="border-top py-2 shadow-sm p-3 rounded">
-                                            <Row className="mb-3 gy-3">
-                                                <Col md={4}>
-                                                    <Form.Group controlId="formGridEmail">
-                                                        <Form.Label className="text-muted">Username</Form.Label>
-                                                        <Form.Control type="email" placeholder="Enter email" defaultValue={userData?.username} className="border-0 shadow-sm rounded text-muted" />
-                                                    </Form.Group>
-                                                </Col>
-                                                <Col md={4}>
-                                                    <Form.Group controlId="formGridEmail">
-                                                        <Form.Label className="text-muted">Email</Form.Label>
-                                                        <Form.Control type="email" placeholder="Enter email" defaultValue={userData?.email} className="border-0 shadow-sm rounded text-muted" />
-                                                    </Form.Group>
-                                                </Col>
-                                                <Col md={4}>
-                                                    <Form.Group controlId="formGridPassword">
-                                                        <Form.Label className="text-muted">Password</Form.Label>
-                                                        <Form.Control type="password" placeholder="Password" defaultValue={userData?.password} className="border-0 shadow-sm rounded text-muted" />
-                                                    </Form.Group>
-                                                </Col>
-                                                <Col md={6}>
-                                                    <Form.Group className="mb-3" controlId="formGridAddress1">
-                                                        <Form.Label className="text-muted">Address</Form.Label>
-                                                        <Form.Control placeholder="1234 Main St" defaultValue="dhaka, bangladesh" className="border-0 shadow-sm rounded text-muted" />
-                                                    </Form.Group>
-                                                </Col>
-                                                <Col md={6}>
-                                                    <Row className="mb-3">
-                                                        <Form.Group as={Col} controlId="formGridCity">
-                                                            <Form.Label className="text-muted">City</Form.Label>
-                                                            <Form.Control defaultValue="dhaka" className="border-0 shadow-sm rounded text-muted" />
-                                                        </Form.Group>
-                                                    </Row>
-                                                </Col>
-                                            </Row>
-                                        </Form>
+                                        <CreateEvents />
                                     </Tab.Pane>
 
                                     <Tab.Pane eventKey="second">
@@ -306,4 +260,4 @@ const Profile = () => {
     )
 }
 
-export default Profile 
+export default Events  

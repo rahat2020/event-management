@@ -3,42 +3,40 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { Image, Tab, Tabs, Form, Button, Card } from 'react-bootstrap';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
-import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import './Topbar.css';
 import { ToastContainer, toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 import 'react-toastify/dist/ReactToastify.css';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import axios from 'axios';
 import logo from '../../assets/logo.png'
+import { useGetUserDataByEmailQuery, useLoginMutation, useRegisterMutation } from '../../redux/api/apiSlice';
+import { AuthContext } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Topbar = () => {
-  const userData = 'there is a user data'
+
+  // OFFCANVAS OPEN AND CLOSE 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  // const [LoginData] = useLoginMutation()
-  // const [RegisterData] = useRegisterMutation()
+  // CONTEXT API
+  const { dispatch, user } = useContext(AuthContext)
+
+  // REDUX API
+  const [LoginData] = useLoginMutation()
+  const [RegisterData] = useRegisterMutation()
+  const { data: userData } = useGetUserDataByEmailQuery(user)
+  console.log('userdata', userData)
 
 
-  const setToLocalStorage = (email:any) => {
-    typeof window !== "undefined" ? window.localStorage.setItem("user", email) : false
-  }
-
-  // LOGIN PARTS
+  // LOGIN PARTS HERE
   const [username, setUserName] = useState("")
   const [password, setUser_Password] = useState("")
-  const userEmail = typeof window !== "undefined" ? localStorage.getItem('user') || '' : false
-  const ifUareA = typeof window !== "undefined" ? localStorage.getItem('ifura') || '' : false
-  // const { data: userData } = useUserDataByEmailQuery(userEmail)
-  // const router = useRouter()
 
-  // console.log('router', router)
-  // console.log('routerPath', routerPath)
-  // console.log('topbar', userData?.email)
-
+  // LOGIN FUNCTIONALITIES
   const handleLogin = async (e) => {
     e.preventDefault()
     const object = {
@@ -51,21 +49,11 @@ const Topbar = () => {
       toast('Password must greater than 6 characters')
     } else {
       try {
-        // const res = await LoginData(object)
-        console.log('login', res)
+        const res = await LoginData(object)
+        console.log('login', res.data)
         if (res?.data?.message === "Login successful") {
           toast('Logged in Successfully')
-          // dispatch({ type: "LOGIN_SUCCESS", payload: res?.data?.email });
-          if (res?.data?.role === 'admin') {
-            localStorage.setItem("ifura", "su")
-            setToLocalStorage(res?.data?.email)
-          }
-          if (res?.data?.role === 'user') {
-            localStorage.setItem("ifura", "nu")
-            setToLocalStorage(res?.data?.email)
-          }
-          router.push('/user-profile')
-
+          dispatch({ type: "LOGIN_SUCCESS", payload: res?.data?.email });
         } else if (res?.error?.data === "wrong credentials") {
           toast('User not found')
         } else {
@@ -78,15 +66,15 @@ const Topbar = () => {
     }
   }
 
-  // REGISTER 
+  // USER REGISTERS STATES
   const [usernameReg, setUserNameReg] = useState("")
   const [passwordReg, setUser_PasswordReg] = useState("")
   const [email, setUser_Email] = useState("")
   const [file, setFile] = useState("")
   const [terms, setUser_Terms] = useState("")
-  const [role, setRole] = useState("")
-  // console.log('terms', terms)
 
+
+  // USER REGISTRATION FUNCTIONS
   const handleRegistration = async (e) => {
     e.preventDefault()
     if (!usernameReg || !passwordReg || !email || !file || !terms) {
@@ -100,7 +88,7 @@ const Topbar = () => {
         data.append("upload_preset", "upload");
         const uploadRes = await axios.post("https://api.cloudinary.com/v1_1/rahatdev1020/image/upload", data)
         const { url } = uploadRes.data
-        console.log('cloudinary', url)
+        // console.log('cloudinary', url)
         const object = {
           username: usernameReg,
           password: passwordReg,
@@ -109,7 +97,7 @@ const Topbar = () => {
           role,
           terms,
         }
-        // const res = await RegisterData(object)
+        const res = await RegisterData(object)
         console.log('register', res)
         if (res?.data === "registration successfull") {
           toast('Registration Successfull, now login to access the profile')
@@ -130,16 +118,16 @@ const Topbar = () => {
     }
   }
 
-  // LOGOUT
+  // LOGOUT USER
+  const navigate = useNavigate()
   const handleLogout = () => {
     Swal.fire({
       icon: 'success',
       title: 'Thanks for being with us',
     })
-    typeof window !== "undefined" ? window.localStorage.removeItem("user") : false;
-    typeof window !== "undefined" ? window.localStorage.removeItem("ifura") : false;
-    typeof window !== "undefined" ? window.location.reload() : false;
-    
+    dispatch({ type: "LOGOUT" })
+    navigate("/")
+
   }
 
   return (
@@ -160,7 +148,16 @@ const Topbar = () => {
               <Nav.Link href="#" onClick={handleShow}>
                 <div className="d-flex justify-content-center align-items-center ">
                   <span className='nav_profile_con'>
-                    <PermIdentityIcon className='profileIcon' />
+                    {
+                      userData === '' ? 'sign in' :
+                        <Image
+                          src={userData?.photo}
+                          alt={userData?.username}
+                          style={{ width: "40px", height: "40px", borderRadius: '50%', objectFit: 'contain' }}
+                        />
+                    }
+                    {/* <PermIdentityIcon className='profileIcon' /> */}
+
                   </span>
                 </div>
               </Nav.Link>
@@ -179,10 +176,9 @@ const Topbar = () => {
       <Offcanvas show={show} onHide={handleClose} end>
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>
-            {/* {
+            {
               userData === '' ? <span className=' text-secondary'>Welcome, start your journey from here!</span> : 'User panel'
-            } */}
-            User panel
+            }
           </Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
@@ -234,20 +230,13 @@ const Topbar = () => {
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                       <Form.Control type="file" className='border-0 rounded shadow text-muted'
-                        onChange={(e:any) => setFile(e.target.files[0])} />
+                        onChange={(e: any) => setFile(e.target.files[0])} />
                     </Form.Group>
                     <Form.Group className="mb-4" controlId="formBasicPassword">
                       <Form.Control type="password" placeholder="Password"
                         className='border-0 rounded shadow'
                         onChange={(e) => setUser_PasswordReg(e.target.value)}
                       />
-                    </Form.Group>
-                    <Form.Group controlId="formGridState" className="mb-3">
-                      <Form.Select onChange={(e) => setRole(e.target.value)} className='border-0 rounded shadow text-muted'>
-                        <option>Choose user role</option>
-                        <option>admin</option>
-                        <option>user</option>
-                      </Form.Select>
                     </Form.Group>
                     <Form.Group className="mb-3" id="formGridCheckbox">
                       <Form.Check type="checkbox"
@@ -283,14 +272,14 @@ const Topbar = () => {
                   </div>
                   <div className="d-flex justify-content-between align-items-center">
                     <Card.Title className='text-secondary'>Status:</Card.Title>
-                    <Card.Title className='text-secondary'>Offline</Card.Title>
+                    <Card.Title className='text-secondary'>Online</Card.Title>
                   </div>
                   <div className="d-flex justify-content-between align-items-center">
                     <Card.Title className='text-secondary'>Total Posts:</Card.Title>
                     <Card.Title className='text-secondary'>9</Card.Title>
                   </div>
                   <div className="d-flex justify-content-between align-items-center mt-2">
-                  
+
                     <Nav.Link href="/user-profile" className='text-decoration-none' >
                       <Button className='commonBtn_blue' size='sm'>Profile</Button>
                     </Nav.Link>

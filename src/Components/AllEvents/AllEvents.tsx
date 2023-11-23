@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import './Events.css';
+import './AllEvents.css';
 import { Card, Button, Container, Row, Col, Image, Form } from 'react-bootstrap'
 import { Link } from 'react-router-dom';
+import { useGetAllEventsQuery } from '../../redux/api/apiSlice';
 
 
 const eventData = [
@@ -51,12 +52,17 @@ const eventData = [
     "photo": "https://english.cdn.zeenews.com/sites/default/files/2022/05/28/1047568-resort-wedding.jpg",
   },
 ]
-const Events = () => {
+const AllEvents = () => {
   const [data, setData] = useState([])
-  console.log(data)
+  // console.log(data)
   useEffect(() => {
     setData(eventData);
   }, [])
+
+
+  // REDUX QUERIES
+  const { data: eventsData } = useGetAllEventsQuery(undefined)
+  console.log(eventsData)
 
   // SEARACH QUERY DATA
   const [searchQuery, setSearchQuery] = useState('');
@@ -66,6 +72,7 @@ const Events = () => {
   //     (item?.desc?.toLowerCase().includes(searchQuery.toLowerCase())) ||
   //     (item?.author?.toLowerCase().includes(searchQuery.toLowerCase()))
   // );
+  
   return (
     <Container className='my-5'>
       <div className="d-flex justify-content-center align-items-center">
@@ -133,4 +140,4 @@ const Events = () => {
   )
 }
 
-export default Events
+export default AllEvents
