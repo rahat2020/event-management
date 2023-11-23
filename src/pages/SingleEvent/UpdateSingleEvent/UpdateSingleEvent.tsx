@@ -1,78 +1,54 @@
 import { Row, Col, Form, Button } from 'react-bootstrap';
-import { useState, useContext } from 'react';
-import { AuthContext } from '../../../context/AuthContext';
-import { useCreateNewEventMutation, useGetUserDataByEmailQuery } from '../../../redux/api/apiSlice';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import Swal from "sweetalert2";
-import axios from 'axios';
+import { useState } from 'react';
+import { useGetSingleEventsQuery, useUpdateEventMutation } from '../../../redux/api/apiSlice';
+import Swal from 'sweetalert2';
 
-const CreateEvents = () => {
-    // AUTH CONTEXT APIS
-    const { user } = useContext(AuthContext)
-
+const UpdateSingleEvent = ({ id, setShow }) => {
     // REDUX QUERIES
-    const { data: userData } = useGetUserDataByEmailQuery(user)
-    const [CreateNewEvent] = useCreateNewEventMutation()
+    const { data } = useGetSingleEventsQuery(id)
+    const [UpdateEvent] = useUpdateEventMutation()
+    // UPDATE EVENT
+    const [title, setTitle] = useState(data?.title || "")
+    const [desc, setDesc] = useState(data?.desc || "")
+    const [location, setLocations] = useState(data?.location || "")
+    const [startDate, setStartDate] = useState(data?.startDate || "")
+    const [endDate, setEndDate] = useState(data?.endDate || "")
+    const [startTime, setStartTime] = useState(data?.startTime || "")
+    const [endTime, setEndTime] = useState(data?.endTime || "")
+    const [file, setFile] = useState(data?.file || "")
+    const [category, setCategory] = useState(data?.category || "")
+    const [price, setPrice] = useState(data?.price || "")
 
-    // EVENTS CREATE FUNCTIONS
-    const [title, setTitle] = useState("")
-    const [desc, setDesc] = useState("")
-    const [location, setLocations] = useState("")
-    const [startDate, setStartDate] = useState("")
-    const [endDate, setEndDate] = useState("")
-    const [startTime, setStartTime] = useState("")
-    const [endTime, setEndTime] = useState("")
-    const [file, setFile] = useState("")
-    const [category, setCategory] = useState("")
-    const [price, setPrice] = useState("")
-
-    const handleCreateEvents = async (event: any) => {
-        event.preventDefault()
-
-        if (!title || !desc || !location || !startDate || !endDate || !startTime || !endTime) {
-            Swal.fire({
-                icon: 'error',
-                title: "feild can not be empty"
-            })
-        } else {
-            try {
-                const data = new FormData();
-                data.append("file", file);
-                data.append("upload_preset", "upload");
-                const uploadRes = await axios.post("https://api.cloudinary.com/v1_1/rahatdev1020/image/upload", data)
-                const { url } = uploadRes.data
-                const obj = {
-                    title, desc, location, startDate, endDate, startTime, endTime, photos: url, category, price, owner: userData
-                }
-                const res = await CreateNewEvent(obj)
-                if (res?.data === "Event created") {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Event created"
-                    })
-                    setTitle("")
-                    setDesc("")
-                    setCategory("")
-                    setEndDate("")
-                    setStartDate("")
-                    setStartTime("")
-                    setEndTime("")
-                    setPrice("")
-                    setFile("")
-                    setLocations("")
-                }
-            } catch (err) {
+    const handleUpdateEvent = async (e: any) => {
+        e.preventDefault();
+        try {
+            const obj = {
+                id:id,
+                title: title || data?.title || "",
+                desc: desc || data?.desc || "",
+                location: location || data?.location || "",
+                startDate: startDate || data?.startDate || "",
+                endDate: endDate || data?.endDate || "",
+                startTime: startTime || data?.startTime || "",
+                endTime: endTime || data?.endTime || "",
+                photos: file || data?.photos || "",
+                category: category || data?.category || "",
+                price: price || data?.price || "",
+            }
+            const res = await UpdateEvent(obj)
+            console.log('UpdateSingleEvent', res)
+            if (res?.data === "event updated") {
                 Swal.fire({
-                    icon: 'error',
-                    title: "Can not create event"
+                    icon: 'success',
+                    title: 'Event Updated'
                 })
+                setShow(false)
             }
 
+        } catch (err) {
+            console.log(err)
         }
-
     }
-
 
     return (
         <div>
@@ -84,7 +60,7 @@ const CreateEvents = () => {
                             <Form.Control type="email"
                                 placeholder="Enter email"
                                 className="border-0 shadow-sm rounded text-muted"
-                                value={title}
+                                defaultValue={data?.title}
                                 onChange={(e: any) => setTitle(e.target.value)}
                             />
                         </Form.Group>
@@ -96,7 +72,7 @@ const CreateEvents = () => {
                                 type="text"
                                 placeholder="Dhaka"
                                 className="border-0 shadow-sm rounded text-muted"
-                                value={location}
+                                defaultValue={data?.location}
                                 onChange={(e: any) => setLocations(e.target.value)}
                             />
                         </Form.Group>
@@ -107,7 +83,7 @@ const CreateEvents = () => {
                             <Form.Control
                                 type="date"
                                 className="border-0 shadow-sm rounded text-muted"
-                                value={startDate}
+                                defaultValue={data?.startDate}
                                 onChange={(e: any) => setStartDate(e.target.value)}
                             />
                         </Form.Group>
@@ -118,7 +94,7 @@ const CreateEvents = () => {
                             <Form.Control
                                 type='date'
                                 className="border-0 shadow-sm rounded text-muted"
-                                value={endDate}
+                                defaultValue={data?.endDate}
                                 onChange={(e: any) => setEndDate(e.target.value)}
                             />
                         </Form.Group>
@@ -130,7 +106,7 @@ const CreateEvents = () => {
                                 <Form.Control
                                     type='time'
                                     className="border-0 shadow-sm rounded text-muted"
-                                    value={startTime}
+                                    defaultValue={data?.startTime}
                                     onChange={(e: any) => setStartTime(e.target.value)}
                                 />
                             </Form.Group>
@@ -143,7 +119,7 @@ const CreateEvents = () => {
                                 <Form.Control
                                     type='time'
                                     className="border-0 shadow-sm rounded text-muted"
-                                    value={endTime}
+                                    defaultValue={data?.endTime}
                                     onChange={(e: any) => setEndTime(e.target.value)}
                                 />
                             </Form.Group>
@@ -169,7 +145,7 @@ const CreateEvents = () => {
                                     type='text'
                                     placeholder='1254'
                                     className="border-0 shadow-sm rounded text-muted"
-                                    value={price}
+                                    defaultValue={data?.price}
                                     onChange={(e: any) => setPrice(e.target.value)}
                                 />
                             </Form.Group>
@@ -178,8 +154,8 @@ const CreateEvents = () => {
                     <Col md={4}>
                         <Form.Group controlId="formGridState">
                             <Form.Label>Category</Form.Label>
-                            <Form.Select onChange={(e: any) => setCategory(e.target.value)} value={category}>
-                                <option>choose category</option>
+                            <Form.Select onChange={(e: any) => setCategory(e.target.value)} >
+                                <option>{data?.category}</option>
                                 <option value="Marriage">Marriage</option>
                                 <option value="Festibal">Festibal</option>
                                 <option value="Adventure">Adventure</option>
@@ -193,19 +169,18 @@ const CreateEvents = () => {
                     <Col md={12}>
                         <Form.Group controlId="exampleForm.ControlTextarea1">
                             <Form.Label className='text-muted fw-bold'>Descriptions</Form.Label>
-                            <Form.Control as="textarea" rows={3} value={desc} onChange={(e: any) => setDesc(e.target.value)} />
+                            <Form.Control as="textarea" rows={3} defaultValue={data?.desc} onChange={(e: any) => setDesc(e.target.value)} />
                         </Form.Group>
                     </Col>
                     <Col md={12}>
-                        <Button className='commonBtn_red' onClick={handleCreateEvents}>
-                            Create
+                        <Button className='commonBtn_red' onClick={handleUpdateEvent}>
+                            Update
                         </Button>
                     </Col>
                 </Row>
             </Form>
-            <ToastContainer />
         </div>
     )
 }
 
-export default CreateEvents
+export default UpdateSingleEvent

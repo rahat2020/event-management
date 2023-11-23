@@ -5,7 +5,7 @@ import './Header.css'
 
 const Header = () => {
   const Tpath = window.location.pathname
-
+    
   return (
     <Navbar expand="lg" className="bg-transparent shadow-sm">
       <Container>

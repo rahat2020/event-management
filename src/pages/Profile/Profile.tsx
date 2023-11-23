@@ -43,9 +43,6 @@ const Profile = () => {
                     password: password || userData?.password || "",
                     email: email || userData?.email || "",
                     photo: file || userData?.photo || "",
-                    role: userData?.role,
-                    terms: userData?.terms
-
                 }
                 console.log('object', Object)
                 const res = await UpdateUser(Object)
@@ -109,6 +106,7 @@ const Profile = () => {
         toast('Logout successfully!')
         dispatch({ type: "LOGOUT" })
         navigate("/")
+        window.location.reload()
     }
 
     // IF THERE IS NO USER (CHECKING USER LOGGED IN OR NOT)
@@ -148,6 +146,7 @@ const Profile = () => {
                                     </Nav.Item>
                                 </Nav>
                             </Col>
+
                             <Col sm={9}>
                                 <Tab.Content>
                                     <Tab.Pane eventKey="first">
@@ -222,29 +221,15 @@ const Profile = () => {
                                                 </Col>
                                                 <Col md={6}>
                                                     <Form.Group className="mb-3" controlId="formGridAddress1">
-                                                        <Form.Label className="text-muted">Address</Form.Label>
-                                                        <Form.Control placeholder="1234 Main St" defaultValue="dhaka, bangladesh" className="border-0 shadow-sm rounded text-muted" />
-                                                    </Form.Group>
-                                                </Col>
-                                                <Col md={6}>
-                                                    <Form.Group className="mb-3" controlId="formGridAddress1">
                                                         <Form.Label className="text-muted">Image</Form.Label>
                                                         <Form.Control type="file" className="border-0 shadow-sm rounded text-muted"
-                                                            onChange={(e) => setUser_Photo(e.target.value)}
+                                                            onChange={(e) => setUser_Photo(e.target.files[0])}
                                                         />
                                                     </Form.Group>
                                                 </Col>
-                                                <Col md={6}>
-                                                    <Row className="mb-3">
-                                                        <Form.Group as={Col} controlId="formGridCity">
-                                                            <Form.Label className="text-muted">City</Form.Label>
-                                                            <Form.Control defaultValue="dhaka" className="border-0 shadow-sm rounded text-muted" />
-                                                        </Form.Group>
-                                                    </Row>
-                                                </Col>
                                                 <Col md={12}>
                                                     <Button variant="outline-secondary w-100 text-capitalize" size="sm"
-                                                        onClick={handleSubmit}>update</Button>
+                                                        onClick={handleSubmit}>Update</Button>
                                                 </Col>
                                             </Row>
                                         </Form>

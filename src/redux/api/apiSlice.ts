@@ -38,9 +38,15 @@ export const apis = createApi({
             },
             invalidatesTags: ['Events']
         }),
-        // GET USER DATA
+        // GET USER OWN DATA
         getUserDataByEmail: builder.query({
             query: (email) => `/auth/user-data?email=${email}`,
+            providesTags: ['Events']
+        }),
+
+        // GET USER OWN EVENT DATA
+        getUserEventDataByEmail: builder.query({
+            query: (email) => `/auth/user?email=${email}`,
             providesTags: ['Events']
         }),
 
@@ -64,6 +70,32 @@ export const apis = createApi({
             invalidatesTags: ['Events']
         }),
 
+        // UPDATE EVENT
+        updateEvent: builder.mutation({
+            query: (data) => {
+                const { id, ...body } = data
+                console.log('apiSlice-Update-data', body)
+                console.log('apiSlice-Update-ID', id)
+                return {
+                    url: `/events/update/${id}`,
+                    method: 'PUT',
+                    body,
+                }
+            },
+            invalidatesTags: ['Events']
+        }),
+        // ATTAND IN THE EVENTS
+        attandInTheEvent: builder.mutation({
+            query: (data) => {
+                const { id, ...body } = data
+                return {
+                    url: `/events/attand/${id}`,
+                    method: 'POST',
+                    body
+                }
+            },
+            invalidatesTags: ['Events']
+        }),
         // GET ALL EVENTS
         getAllEvents: builder.query({
             query: () => '/events/get',
@@ -100,4 +132,7 @@ export const {
     useDeleteEventsMutation,
     useGetSingleEventsQuery,
     useGetAllEventsQuery,
+    useAttandInTheEventMutation,
+    useUpdateEventMutation,
+    useGetUserEventDataByEmailQuery
 } = apis

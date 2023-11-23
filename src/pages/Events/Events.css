@@ -6,7 +6,7 @@
   }
   
   .btn_up{
-      border: none;
+      border: none !important;
       padding: 8px 25px;
       text-transform: capitalize;
       background-image: linear-gradient(180deg, #FF8F50, #FF5324);

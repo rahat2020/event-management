@@ -8,13 +8,22 @@ import SingleEvent from './pages/SingleEvent/SingleEvent'
 import NotFound from './pages/NotFound'
 import Profile from './pages/Profile/Profile'
 import Events from './pages/Events/Events'
+import {useContext} from 'react';
+import { AuthContext } from './context/AuthContext'
+import { useGetUserDataByEmailQuery } from './redux/api/apiSlice'
 
 function App() {
+  // AUTH CONTEXT APIS
+  const { user } = useContext(AuthContext)
+  // REDUX QUERIES
+  const { data: userData } = useGetUserDataByEmailQuery(user)
 
   return (
     <BrowserRouter>
       <Topbar />
-      <Header />
+      {
+        !userData ? '' : <Header />
+      }
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/single-event/:id' element={<SingleEvent />} />

@@ -29,7 +29,7 @@ const Topbar = () => {
   const [LoginData] = useLoginMutation()
   const [RegisterData] = useRegisterMutation()
   const { data: userData } = useGetUserDataByEmailQuery(user)
-  console.log('userdata', userData)
+  // console.log('userdata', userData)
 
 
   // LOGIN PARTS HERE
@@ -127,6 +127,7 @@ const Topbar = () => {
     })
     dispatch({ type: "LOGOUT" })
     navigate("/")
+    window.location.reload()
 
   }
 
@@ -147,18 +148,16 @@ const Topbar = () => {
 
               <Nav.Link href="#" onClick={handleShow}>
                 <div className="d-flex justify-content-center align-items-center ">
-                  <span className='nav_profile_con'>
-                    {
-                      userData === '' ? 'sign in' :
+                  {
+                    !userData ? <span className='sign_btn'>Sign in</span> :
+                      <span className='nav_profile_con'>
                         <Image
                           src={userData?.photo}
                           alt={userData?.username}
                           style={{ width: "40px", height: "40px", borderRadius: '50%', objectFit: 'contain' }}
                         />
-                    }
-                    {/* <PermIdentityIcon className='profileIcon' /> */}
-
-                  </span>
+                      </span>
+                  }
                 </div>
               </Nav.Link>
               <Nav.Link href="#" style={{ fontSize: '.94rem' }} >
