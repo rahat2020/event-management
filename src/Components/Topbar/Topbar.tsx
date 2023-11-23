@@ -94,7 +94,6 @@ const Topbar = () => {
           password: passwordReg,
           email,
           photo: url,
-          role,
           terms,
         }
         const res = await RegisterData(object)
@@ -279,7 +278,7 @@ const Topbar = () => {
                   </div>
                   <div className="d-flex justify-content-between align-items-center mt-2">
 
-                    <Nav.Link href="/user-profile" className='text-decoration-none' >
+                    <Nav.Link href="/profile" className='text-decoration-none' >
                       <Button className='commonBtn_blue' size='sm'>Profile</Button>
                     </Nav.Link>
                     <Button className='commonBtn_red' size='sm' onClick={handleLogout}>Logout</Button>

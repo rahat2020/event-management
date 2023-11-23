@@ -5,7 +5,6 @@ import Row from 'react-bootstrap/Row';
 import Tab from 'react-bootstrap/Tab';
 import Form from 'react-bootstrap/Form';
 import './Profile.css';
-import Table from 'react-bootstrap/Table';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ProfileNav from "./ProfileNav/ProfileNav";
@@ -136,13 +135,8 @@ const Profile = () => {
                                     <Nav.Item>
                                         <Nav.Link eventKey="second" className="">Update informations</Nav.Link>
                                     </Nav.Item>
-
                                     <Nav.Item>
-                                        <Nav.Link eventKey="third" className="">Booked events</Nav.Link>
-                                    </Nav.Item>
-
-                                    <Nav.Item>
-                                        <Nav.Link eventKey="four" className="" onClick={handleLogout}>Logout</Nav.Link>
+                                        <Nav.Link eventKey="third" className="" onClick={handleLogout}>Logout</Nav.Link>
                                     </Nav.Item>
                                 </Nav>
                             </Col>
@@ -233,51 +227,6 @@ const Profile = () => {
                                                 </Col>
                                             </Row>
                                         </Form>
-                                    </Tab.Pane>
-
-                                    <Tab.Pane eventKey="third">
-                                        <ProfileNav />
-                                        <Table striped bordered responsive hover className="rounded shadow-sm mt-4">
-                                            <thead>
-                                                <tr>
-                                                    <th className="text-secondary">S/N</th>
-                                                    <th className="text-secondary">First Name</th>
-                                                    <th className="text-secondary">Event Name</th>
-                                                    <th className="text-secondary">Payment Status</th>
-                                                    <th className="text-secondary">Start Date</th>
-                                                    <th className="text-secondary">End Date</th>
-                                                    <th className="text-secondary">Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td className="text-muted">1</td>
-                                                    <td className="text-muted">Kazi Rahat</td>
-                                                    <td className="text-muted">Kaptai tour</td>
-                                                    <td className="text-muted">
-                                                        <Button className="btn_paid">half paid</Button>
-                                                    </td>
-                                                    <td className="text-muted">21/10/2023</td>
-                                                    <td className="text-muted">25/10/2023</td>
-                                                    <td>
-                                                        <Button className="btn_up">Cancel</Button>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td className="text-muted">1</td>
-                                                    <td className="text-muted">Kazi Rahat</td>
-                                                    <td className="text-muted">Kaptai tour</td>
-                                                    <td className="text-muted">
-                                                        <Button className="btn_unpaid">unpaid</Button>
-                                                    </td>
-                                                    <td className="text-muted">21/10/2023</td>
-                                                    <td className="text-muted">25/10/2023</td>
-                                                    <td>
-                                                        <Button className="btn_up">Cancel</Button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </Table>
                                     </Tab.Pane>
 
                                 </Tab.Content>

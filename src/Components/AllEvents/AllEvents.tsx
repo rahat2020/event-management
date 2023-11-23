@@ -41,7 +41,7 @@ const AllEvents = () => {
 
   // CONTENT PAGINATIONS
   const [itemOffset, setItemOffset] = useState(0);
-  const itemsPerPage = 9;
+  const itemsPerPage = 6;
   const endOffset = itemOffset + itemsPerPage;
   console.log(`Loading items from ${itemOffset} to ${endOffset}`);
   const currentItems = filteredDataLaunch?.slice(itemOffset, endOffset);

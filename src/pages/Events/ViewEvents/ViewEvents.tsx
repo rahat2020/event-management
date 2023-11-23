@@ -12,12 +12,11 @@ const ViewEvents = () => {
     const [DeleteEvent] = useDeleteEventsMutation()
     console.log('ViewEvents', data)
 
-    const handleDelete = async (event:any, _id) => {
-        event.preventDefault()
+    const handleDelete = async (_id: string) => {
+
         try {
-            const obj = { _id }
-            const res = await DeleteEvent(obj)
-            if (res?.data === "user deleted") {
+            const res = await DeleteEvent(_id)
+            if (res?.data === "event deleted") {
                 Swal.fire({
                     icon: "success",
                     title: "Event deleted"
