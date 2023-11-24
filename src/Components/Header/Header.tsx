@@ -12,14 +12,17 @@ const Header = () => {
   const Tpath = window.location.pathname
   
   // AUTH CONTEXT APIS
-  const { dispatch, user } = useContext(AuthContext)
+  const { dispatch } = useContext(AuthContext)
 
   // LOGOUT USER
   const navigate = useNavigate()
   const handleLogout = (event: any) => {
     event.preventDefault();
     toast('Logout successfully!')
-    dispatch({ type: "LOGOUT" })
+    dispatch({
+      type: "LOGOUT",
+      payload: ''
+    })
     navigate("/")
     window.location.reload()
   }

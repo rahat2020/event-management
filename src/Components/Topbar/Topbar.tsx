@@ -4,16 +4,18 @@ import Navbar from 'react-bootstrap/Navbar';
 import { Image, Tab, Tabs, Form, Button, Card } from 'react-bootstrap';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import './Topbar.css';
 import { ToastContainer, toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState, useContext } from 'react';
 import axios from 'axios';
 import logo from '../../assets/logo.png'
-import { useGetUserDataByEmailQuery, useLoginMutation, useRegisterMutation } from '../../redux/api/apiSlice';
+import { useGetUserDataByEmailQuery, useGetUserEventDataByEmailQuery, useLoginMutation, useRegisterMutation } from '../../redux/api/apiSlice';
 import { AuthContext } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import './Topbar.css';
+
+
 
 const Topbar = () => {
 
@@ -29,6 +31,7 @@ const Topbar = () => {
   const [LoginData] = useLoginMutation()
   const [RegisterData] = useRegisterMutation()
   const { data: userData } = useGetUserDataByEmailQuery(user)
+  const { data: userEventData } = useGetUserEventDataByEmailQuery(user)
   // console.log('userdata', userData)
 
 
@@ -37,7 +40,7 @@ const Topbar = () => {
   const [password, setUser_Password] = useState("")
 
   // LOGIN FUNCTIONALITIES
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: any) => {
     e.preventDefault()
     const object = {
       username,
@@ -50,15 +53,24 @@ const Topbar = () => {
     } else {
       try {
         const res = await LoginData(object)
-        console.log('login', res.data)
-        if (res?.data?.message === "Login successful") {
-          toast('Logged in Successfully')
-          dispatch({ type: "LOGIN_SUCCESS", payload: res?.data?.email });
-        } else if (res?.error?.data === "wrong credentials") {
-          toast('User not found')
+
+        if (res && 'data' in res) {
+          if (res.data.message === "Login successful") {
+            toast('Logged in Successfully')
+            dispatch({ type: "LOGIN_SUCCESS", payload: res.data.email });
+          } else {
+            toast('Login Failed')
+          }
+        } else if (res && 'error' in res) {
+          if ('data' in res.error && res.error.data === "wrong credentials") {
+            toast('User not found')
+          } else {
+            toast('Login Failed')
+          }
         } else {
-          toast('Login Failed')
+          console.error('Unexpected response structure:', res);
         }
+
       } catch (e) {
         console.log(e)
         e && toast('Login Failed')
@@ -72,10 +84,10 @@ const Topbar = () => {
   const [email, setUser_Email] = useState("")
   const [file, setFile] = useState("")
   const [terms, setUser_Terms] = useState("")
-
+  console.log('terms', terms)
 
   // USER REGISTRATION FUNCTIONS
-  const handleRegistration = async (e) => {
+  const handleRegistration = async (e: any) => {
     e.preventDefault()
     if (!usernameReg || !passwordReg || !email || !file || !terms) {
       toast('Field can not be empty')
@@ -88,7 +100,6 @@ const Topbar = () => {
         data.append("upload_preset", "upload");
         const uploadRes = await axios.post("https://api.cloudinary.com/v1_1/rahatdev1020/image/upload", data)
         const { url } = uploadRes.data
-        // console.log('cloudinary', url)
         const object = {
           username: usernameReg,
           password: passwordReg,
@@ -98,15 +109,21 @@ const Topbar = () => {
         }
         const res = await RegisterData(object)
         console.log('register', res)
-        if (res?.data === "registration successfull") {
-          toast('Registration Successfull, now login to access the profile')
-        } else if (res.error.status === 400) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Registration Failed',
-            text: `${res.error.data}`
-          })
+
+        if (res && 'data' in res) {
+          if (res.data === 'registration successful') {
+            toast('Registration Successful, now login to access the profile');
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Registration Failed',
+              text: 'Please fill everything in form and try to give valid credentials',
+            });
+          }
+        } else {
+          console.error('Unhandled error:', res.error);
         }
+
       } catch (e) {
         console.log(e)
         e && Swal.fire({
@@ -124,7 +141,10 @@ const Topbar = () => {
       icon: 'success',
       title: 'Thanks for being with us',
     })
-    dispatch({ type: "LOGOUT" })
+    dispatch({
+      type: "LOGOUT",
+      payload: undefined
+    })
     navigate("/")
     window.location.reload()
 
@@ -273,8 +293,8 @@ const Topbar = () => {
                     <Card.Title className='text-secondary'>Online</Card.Title>
                   </div>
                   <div className="d-flex justify-content-between align-items-center">
-                    <Card.Title className='text-secondary'>Total Posts:</Card.Title>
-                    <Card.Title className='text-secondary'>9</Card.Title>
+                    <Card.Title className='text-secondary'>Total Events:</Card.Title>
+                    <Card.Title className='text-secondary'>{userEventData?.length}</Card.Title>
                   </div>
                   <div className="d-flex justify-content-between align-items-center mt-2">
 

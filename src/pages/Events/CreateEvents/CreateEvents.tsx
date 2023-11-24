@@ -2,7 +2,7 @@ import { Row, Col, Form, Button } from 'react-bootstrap';
 import { useState, useContext } from 'react';
 import { AuthContext } from '../../../context/AuthContext';
 import { useCreateNewEventMutation, useGetUserDataByEmailQuery } from '../../../redux/api/apiSlice';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from "sweetalert2";
 import axios from 'axios';
@@ -46,22 +46,27 @@ const CreateEvents = () => {
                     title, desc, location, startDate, endDate, startTime, endTime, photos: url, category, price, owner: userData
                 }
                 const res = await CreateNewEvent(obj)
-                if (res?.data === "Event created") {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Event created"
-                    })
-                    setTitle("")
-                    setDesc("")
-                    setCategory("")
-                    setEndDate("")
-                    setStartDate("")
-                    setStartTime("")
-                    setEndTime("")
-                    setPrice("")
-                    setFile("")
-                    setLocations("")
+                if (res && 'data' in res) {
+                    if (res?.data === "Event created") {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Event created"
+                        })
+                        setTitle("")
+                        setDesc("")
+                        setCategory("")
+                        setEndDate("")
+                        setStartDate("")
+                        setStartTime("")
+                        setEndTime("")
+                        setPrice("")
+                        setFile("")
+                        setLocations("")
+                    }
+                } else {
+                    console.error('Unhandled error:', res.error);
                 }
+
             } catch (err) {
                 Swal.fire({
                     icon: 'error',

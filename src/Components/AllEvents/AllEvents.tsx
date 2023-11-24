@@ -19,7 +19,7 @@ const AllEvents = () => {
 
   // SEARACH QUERY EVENTS DATA
   const [searchQuery, setSearchQuery] = useState('');
-  const filteredData = eventsData?.filter(item =>
+  const filteredData = eventsData?.filter((item:any) =>
     (item?.title?.toLowerCase().includes(searchQuery.toLowerCase())) ||
     (item?.location?.toLowerCase().includes(searchQuery.toLowerCase())) ||
     (item?.category?.toLowerCase().includes(searchQuery.toLowerCase()))

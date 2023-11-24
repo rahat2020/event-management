@@ -1,30 +1,30 @@
-# React + TypeScript + Vite
+# EventsNestle
+<!-- ## Demostration Video:- [VIDEO](https://www.loom.com/share/b912d43a00b346d5a8b0bf4971b5fa6a?sid=a3f54156-d742-4bb2-acea-77c195e99120)  -->
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### Live website - [EventsNestle](https://tour-travel-m52n.vercel.app/)
+### How to install 
+- Clone the project in your machine.
+- Open the project in your code editor.
+- Run npm install or npm i.
+- And run npm run dev to start the project.
+- Start using the project.
 
-Currently, two official plugins are available:
+### Implemented Functionalities
+- User can can create a new account.
+- User can login with his credentials.
+- A user can create new events, update his events and can delete his events.
+- A logged in user can attand any events once they have attand initially Attand button will be disabled.
+- Used Redux toolkit to fetch API's and used Context api.
+- Made the website seamless and user freindly for anyone.
+- 
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### Implemented Features
+- Navbar added.
+- Added card or list item skelton as loader.
+- Content Rendering after fecthing API.
+- Search query implemented by event Name, locaion and category.
+- Implemented show all upcoming only.
+- Implemented filtering options by category and all.
+- Single event view.
+- User profile and user event creation dashboard.
+- Footer added.

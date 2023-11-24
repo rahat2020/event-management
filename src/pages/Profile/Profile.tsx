@@ -1,4 +1,4 @@
-import { Button, Container, Image } from "react-bootstrap"
+import { Button, Container } from "react-bootstrap"
 import Col from 'react-bootstrap/Col';
 import Nav from 'react-bootstrap/Nav';
 import Row from 'react-bootstrap/Row';
@@ -14,6 +14,7 @@ import { useGetUserDataByEmailQuery, useUpdateUserDataMutation } from "../../red
 import { AuthContext } from "../../context/AuthContext";
 import { useContext } from 'react'
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Profile = () => {
 
@@ -45,17 +46,22 @@ const Profile = () => {
                 }
                 console.log('object', Object)
                 const res = await UpdateUser(Object)
-                if (res?.data?.message === "user updated") {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'User updated successfully',
-                    })
+                if (res && 'data' in res) {
+                    if (res?.data?.message === "user updated") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'User updated successfully',
+                        })
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'User Update failed',
+                        })
+                    }
                 } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'User Update failed',
-                    })
+                    console.error('Unhandled error:', res.error);
                 }
+
 
             } else if (file) {
                 const data = new FormData();
@@ -64,26 +70,29 @@ const Profile = () => {
                 const uploadRes = await axios.post("https://api.cloudinary.com/v1_1/rahatdev1020/image/upload", data);
                 const { url } = uploadRes.data;
                 const Object = {
-                    id: item?._id,
-                    userId: item?._id,
-                    username: username || item?.username || "",
-                    password: password || item?.password || "",
-                    email: email || item?.email || "",
-                    photo: url || item?.photo || "",
-                    role: role || item?.role || "",
+                    id: userData?._id,
+                    userId: userData?._id,
+                    username: username || userData?.username || "",
+                    password: password || userData?.password || "",
+                    email: email || userData?.email || "",
+                    photo: url || userData?.photo || "",
                 }
-                // const res = await UpdateUser(Object)
+                const res = await UpdateUser(Object)
                 console.log('res', res)
-                if (res?.data?.message === "user updated") {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Profile updated successfully',
-                    })
+                if (res && 'data' in res) {
+                    if (res?.data?.message === "user updated") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'User updated successfully',
+                        })
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'User Update failed',
+                        })
+                    }
                 } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'User Update failed',
-                    })
+                    console.error('Unhandled error:', res.error);
                 }
             }
 
@@ -103,7 +112,10 @@ const Profile = () => {
     const handleLogout = (event: any) => {
         event.preventDefault();
         toast('Logout successfully!')
-        dispatch({ type: "LOGOUT" })
+        dispatch({
+            type: "LOGOUT",
+            payload: ''
+        })
         navigate("/")
         window.location.reload()
     }
@@ -217,7 +229,7 @@ const Profile = () => {
                                                     <Form.Group className="mb-3" controlId="formGridAddress1">
                                                         <Form.Label className="text-muted">Image</Form.Label>
                                                         <Form.Control type="file" className="border-0 shadow-sm rounded text-muted"
-                                                            onChange={(e) => setUser_Photo(e.target.files[0])}
+                                                            onChange={(e:any) => setUser_Photo(e.target.files[0])}
                                                         />
                                                     </Form.Group>
                                                 </Col>

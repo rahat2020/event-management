@@ -2,7 +2,8 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 export const apis = createApi({
     reducerPath: 'apis',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000' }),
+    baseQuery: fetchBaseQuery({ baseUrl: 'https://events-nestle-server.vercel.app' }),
+    // baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000' }),
     tagTypes: ['Events'],
     endpoints: (builder) => ({
 

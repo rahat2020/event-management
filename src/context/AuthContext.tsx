@@ -1,5 +1,5 @@
 
-import { createContext, useEffect, useReducer, useState, ReactNode, } from "react";
+import { createContext, useEffect, useReducer, ReactNode, } from "react";
 
 
 interface AuthState {
@@ -10,7 +10,6 @@ interface AuthState {
 
 interface AuthAction {
   type: string;
-  // payload?: User | any; 
   payload: string | any;
 }
 
@@ -18,6 +17,7 @@ interface AuthContextProps {
   user: string | null;
   loading: boolean;
   error: any;
+  dispatch:React.Dispatch<AuthAction>
 }
 
 const INITIAL_STATE: AuthState = {

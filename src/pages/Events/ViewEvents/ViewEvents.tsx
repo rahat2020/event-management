@@ -10,18 +10,24 @@ const ViewEvents = () => {
     // REDUX QUERIES
     const { data } = useGetUserEventDataByEmailQuery(user)
     const [DeleteEvent] = useDeleteEventsMutation()
-    console.log('ViewEvents', data)
+    // console.log('ViewEvents', data)
 
     const handleDelete = async (_id: string) => {
 
         try {
             const res = await DeleteEvent(_id)
-            if (res?.data === "event deleted") {
-                Swal.fire({
-                    icon: "success",
-                    title: "Event deleted"
-                })
+            if (res && 'data' in res) {
+                if (res?.data === "event deleted") {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Event deleted"
+                    })
+                }
+            } else {
+                console.error('Unhandled error:', res.error);
             }
+
+
         } catch (err) {
             console.log(err)
             Swal.fire({

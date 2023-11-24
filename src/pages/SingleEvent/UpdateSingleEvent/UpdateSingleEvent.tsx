@@ -3,7 +3,12 @@ import { useState } from 'react';
 import { useGetSingleEventsQuery, useUpdateEventMutation } from '../../../redux/api/apiSlice';
 import Swal from 'sweetalert2';
 
-const UpdateSingleEvent = ({ id, setShow }) => {
+interface UpdateSingleEventProps {
+    id: string | number | any; 
+    setShow: React.Dispatch<React.SetStateAction<boolean>>; 
+  }
+
+const UpdateSingleEvent: React.FC<UpdateSingleEventProps> = ({ id, setShow }) => {
     // REDUX QUERIES
     const { data } = useGetSingleEventsQuery(id)
     const [UpdateEvent] = useUpdateEventMutation()
@@ -23,7 +28,7 @@ const UpdateSingleEvent = ({ id, setShow }) => {
         e.preventDefault();
         try {
             const obj = {
-                id:id,
+                id: id,
                 title: title || data?.title || "",
                 desc: desc || data?.desc || "",
                 location: location || data?.location || "",
@@ -37,13 +42,18 @@ const UpdateSingleEvent = ({ id, setShow }) => {
             }
             const res = await UpdateEvent(obj)
             console.log('UpdateSingleEvent', res)
-            if (res?.data === "event updated") {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Event Updated'
-                })
-                setShow(false)
+            if (res && 'data' in res) {
+                if (res?.data === "event updated") {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Event Updated'
+                    })
+                    setShow(false)
+                }
+            } else {
+                console.error('Unhandled error:', res.error);
             }
+
 
         } catch (err) {
             console.log(err)

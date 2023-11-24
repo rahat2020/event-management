@@ -1,8 +1,8 @@
-import { Card, Button, Container, Row, Col, Image, Table, Form } from 'react-bootstrap'
-import { Link, useParams } from 'react-router-dom';
+import { Card, Button, Container, Row, Col, Image, Table } from 'react-bootstrap'
+import { useParams } from 'react-router-dom';
 import './SingleEvent.css';
 import { useEffect, useContext, useState } from 'react';
-import { useAttandInTheEventMutation, useGetSingleEventsQuery, useGetUserDataByEmailQuery, useUpdateEventMutation } from '../../redux/api/apiSlice';
+import { useAttandInTheEventMutation, useGetSingleEventsQuery, useGetUserDataByEmailQuery } from '../../redux/api/apiSlice';
 import { AuthContext } from '../../context/AuthContext';
 import Swal from 'sweetalert2';
 import Modal from 'react-bootstrap/Modal';
@@ -26,7 +26,7 @@ const SingleEvent = () => {
     const { data: userData } = useGetUserDataByEmailQuery(user)
     const { data } = useGetSingleEventsQuery(id)
     const [AttandInEvent] = useAttandInTheEventMutation()
-    // console.log("SingleEvent_data", data)
+    console.log("SingleEvent_data", data)
     // console.log("userData", userData)
 
     // ATTAND IN THE EVENT
@@ -41,12 +41,17 @@ const SingleEvent = () => {
             }
 
             const res = await AttandInEvent(obj)
-            if (res?.data === "attandce confirmed") {
-                Swal.fire({
-                    icon: "success",
-                    title: "Attandance is confirmed",
-                })
+            if (res && 'data' in res) {
+                if (res?.data === "attandce confirmed") {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Attandance is confirmed",
+                    })
+                }
+            } else {
+                console.error('Unhandled error:', res.error);
             }
+
         } catch (err) {
             Swal.fire({
                 icon: "error",
@@ -60,7 +65,7 @@ const SingleEvent = () => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    
+
     // GO TO TOP
     useEffect(() => {
         window.scrollTo({
@@ -77,6 +82,17 @@ const SingleEvent = () => {
             title: 'Please sign in to access'
         })
     }
+
+    // IF USER IS NOT THE OWNER OF EVENT THEN
+    const handleUnAuthorizedOwner = () => {
+        Swal.fire({
+            icon: 'info',
+            title: 'You can only edit your event'
+        })
+    }
+
+    const joined = data?.attandance?.find((item: any) => item?.username === userData?.username)
+    console.log('joined', joined)
 
     return (
         <Container className="my-5">
@@ -152,15 +168,19 @@ const SingleEvent = () => {
                                             :
                                             <>
                                                 {
-                                                    data?.attandance?.length === 0 ?
+                                                    !joined?.username ?
                                                         <Button className='commonBtn_blue' onClick={handleAttandInTheEvent}>Attand now</Button>
                                                         :
                                                         <Button variant='secondary' disabled >Already joined</Button>
 
                                                 }
-                                                    <Button className='commonBtn_blue' onClick={handleShow}>Edit Event</Button>
-                                                {/* <Link to={`/update-event/${data?._id}`} className='text-decoration-none'>
-                                                </Link> */}
+                                                {
+                                                    data?.owner[0]?.username === userData?.username ?
+                                                        <Button className='commonBtn_blue' onClick={handleShow}>Edit Event</Button>
+                                                        :
+                                                        <Button className='commonBtn_blue' onClick={handleUnAuthorizedOwner}>Edit Event</Button>
+                                                }
+
 
                                             </>
                                     }
@@ -175,11 +195,11 @@ const SingleEvent = () => {
                 <Modal show={show} onHide={handleClose} size='lg'>
                     <Modal.Header closeButton>
                         <Modal.Title>
-                            <Image src={logo} alt="logo" style={{width:'10rem'}}/>
+                            <Image src={logo} alt="logo" style={{ width: '10rem' }} />
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <UpdateSingleEvent id={id} setShow={setShow}/>
+                        <UpdateSingleEvent id={id} setShow={setShow} />
                     </Modal.Body>
                 </Modal>
             </>
