@@ -109,9 +109,9 @@ const Topbar = () => {
         }
         const res = await RegisterData(object)
         console.log('register', res)
-
+       
         if (res && 'data' in res) {
-          if (res.data === 'registration successful') {
+          if (res?.data?.data === 'registration successfull') {
             toast('Registration Successful, now login to access the profile');
           } else {
             Swal.fire({
@@ -122,6 +122,11 @@ const Topbar = () => {
           }
         } else {
           console.error('Unhandled error:', res.error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Registration Failed',
+            text: `${res.error}`,
+          });
         }
 
       } catch (e) {
