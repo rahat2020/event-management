@@ -12,7 +12,7 @@ import axios from 'axios';
 import logo from '../../assets/logo.png'
 import { useGetUserDataByEmailQuery, useGetUserEventDataByEmailQuery, useLoginMutation, useRegisterMutation } from '../../redux/api/apiSlice';
 import { AuthContext } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Topbar.css';
 
 
@@ -108,10 +108,11 @@ const Topbar = () => {
           terms,
         }
         const res = await RegisterData(object)
-        console.log('register', res)
-       
+        // console.log('register', res)
+        // console.log('register user data', res?.data)
+
         if (res && 'data' in res) {
-          if (res?.data?.data === 'registration successfull') {
+          if (res?.data?.message === 'registration successfull') {
             toast('Registration Successful, now login to access the profile');
           } else {
             Swal.fire({
@@ -303,9 +304,9 @@ const Topbar = () => {
                   </div>
                   <div className="d-flex justify-content-between align-items-center mt-2">
 
-                    <Nav.Link href="/profile" className='text-decoration-none' >
+                    <Link to="/profile" className='text-decoration-none' >
                       <Button className='commonBtn_blue' size='sm'>Profile</Button>
-                    </Nav.Link>
+                    </Link>
                     <Button className='commonBtn_red' size='sm' onClick={handleLogout}>Logout</Button>
                   </div>
 

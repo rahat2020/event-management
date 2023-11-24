@@ -34,10 +34,10 @@ const Header = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto me-auto d-flex justify-content-center align-items-center">
-            <Link to='/create-events'>
+            <Link to='/create-events' className='text-decoration-none me-2'>
               <span className={Tpath === '/create-events' ? 'activecls btn_nav_logout' : 'btn_nav_logout'}>Create Events</span>
             </Link>
-            <Link to='/profile'>
+            <Link to='/profile' className='text-decoration-none'>
               <span className={Tpath === '/profile' ? 'activecls btn_nav_logout' : 'btn_nav_logout'}>Profile</span>
             </Link>
             <Nav.Link href='#'>
