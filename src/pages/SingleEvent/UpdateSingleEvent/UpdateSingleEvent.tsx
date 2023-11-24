@@ -4,9 +4,9 @@ import { useGetSingleEventsQuery, useUpdateEventMutation } from '../../../redux/
 import Swal from 'sweetalert2';
 
 interface UpdateSingleEventProps {
-    id: string | number | any; 
-    setShow: React.Dispatch<React.SetStateAction<boolean>>; 
-  }
+    id: string | number | any;
+    setShow: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
 const UpdateSingleEvent: React.FC<UpdateSingleEventProps> = ({ id, setShow }) => {
     // REDUX QUERIES
